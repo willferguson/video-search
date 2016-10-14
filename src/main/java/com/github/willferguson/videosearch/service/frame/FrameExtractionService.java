@@ -1,7 +1,8 @@
-package com.github.willferguson.videosearch.service;
+package com.github.willferguson.videosearch.service.frame;
 
 
 import com.github.willferguson.videosearch.model.Frame;
+import rx.Observable;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -18,5 +19,5 @@ public interface FrameExtractionService {
      * @param videoFile The video file to process.
      * @return A list of Frame objects detailing the output of the task
      */
-    public List<Frame> extractFramesWithTimestamp(Path videoFile);
+    public Observable<Frame> extractFramesWithTimestamp(Path videoFile);
 }

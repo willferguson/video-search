@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="org.springframework.web" level="INFO"/>
+    <jmxConfigurator/>
+
+    <appender name="FILESERVER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/videosearch.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/videosearch_%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+
+        <append>true</append>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%marker] [%t] %-5level %logger{36}:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.github.willferguson" level="INFO" additivity="false">
+        <appender-ref ref="FILESERVER" />
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="FILESERVER" />
+    </root>
+
+</configuration>
