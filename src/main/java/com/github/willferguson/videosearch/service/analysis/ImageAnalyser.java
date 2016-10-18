@@ -26,9 +26,9 @@ public interface ImageAnalyser {
             List<String> analysisTypes);
 
     /**
-     * Returns the set of "analysis types", jobs which this analsyer can perform.
+     * Returns the set of "analysis types", jobs which this analyzer can perform.
      *
-     * TODO Is String expressive enough? IE - need to handle clashing. What happens if we clash? Can we merge resuts somehow or signify whether merging is acceptable?
+     * TODO Is String expressive enough? IE - need to handle clashing. What happens if we clash? Can we merge results somehow or signify whether merging is acceptable?
      * @return
      */
 

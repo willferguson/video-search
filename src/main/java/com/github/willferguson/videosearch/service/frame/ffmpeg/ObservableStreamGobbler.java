@@ -30,12 +30,13 @@ public class ObservableStreamGobbler {
                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                     return new BufferedReader(inputStreamReader);
                 },
-                StringObservable::from,
+                (reader) -> StringObservable
+                                    .from(reader),
                 reader -> {
                     try {
                         reader.close();
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("Could not close Reader", e);
                     }
                 })
                 .subscribeOn(scheduler);
@@ -48,5 +49,13 @@ public class ObservableStreamGobbler {
      */
     public static Observable<String> gobble(InputStream inputStream) {
         return gobble(inputStream, Schedulers.io());
+    }
+
+    public static Observable<String> gobbleByLine(InputStream inputStream) {
+        return StringObservable.byLine(gobble(inputStream));
+    }
+
+    public static Observable<String> gobbleByLine(InputStream inputStream, Scheduler scheduler) {
+        return StringObservable.byLine(gobble(inputStream, scheduler));
     }
 }

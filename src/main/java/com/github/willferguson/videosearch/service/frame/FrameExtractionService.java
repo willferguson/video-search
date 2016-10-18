@@ -2,6 +2,7 @@ package com.github.willferguson.videosearch.service.frame;
 
 
 import com.github.willferguson.videosearch.model.Frame;
+import rx.Completable;
 import rx.Observable;
 
 import java.nio.file.Path;
@@ -20,4 +21,11 @@ public interface FrameExtractionService {
      * @return A list of Frame objects detailing the output of the task
      */
     public Observable<Frame> extractFramesWithTimestamp(Path videoFile);
+
+    /**
+     * Deletes all source files (frames) for the given video.
+     * @param videoId The video for which which we want to delete
+     * @return
+     */
+    public Completable cleanOutput(String videoId);
 }

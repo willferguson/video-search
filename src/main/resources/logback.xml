@@ -22,8 +22,16 @@
         </encoder>
     </appender>
 
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%marker] [%t] %-5level %logger{36}:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <logger name="com.github.willferguson" level="INFO" additivity="false">
         <appender-ref ref="FILESERVER" />
+        <appender-ref ref="STDOUT" />
+
     </logger>
 
     <root level="INFO">
