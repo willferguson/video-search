@@ -1,8 +1,8 @@
-package test;
+package com.github.willferguson.videosearch.service.frame.ffmpeg;
 
 import com.github.willferguson.videosearch.model.Frame;
 import com.github.willferguson.videosearch.service.frame.FrameExtractionService;
-import com.github.willferguson.videosearch.service.frame.ffmpeg.FFMpegFrameExtractionService;
+import com.github.willferguson.videosearch.state.SimpleVideoStateManager;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +14,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by will on 15/10/2016.
@@ -39,7 +41,8 @@ public class FFMpegFrameExtractionServiceTest {
     public void testExtractFrames() throws Exception {
 
         Resource resource = resourceLoader.getResource("classpath:preview.mp4");
-        List<Frame> frames = frameExtractionService.extractFramesWithTimestamp(resource.getFile().toPath())
+        FileInputStream fileInputStream = new FileInputStream(resource.getFile());
+        List<Frame> frames = frameExtractionService.extractFrames(UUID.randomUUID().toString(), fileInputStream)
                 .toList()
                 .toBlocking()
                 .first();
@@ -52,15 +55,13 @@ public class FFMpegFrameExtractionServiceTest {
         }
 
         Path outputPath = Paths.get(OUTPUT_DIR);
-        Assert.assertTrue(Files.exists(outputPath));
+        Path videoOutputFolder = Paths.get(OUTPUT_DIR, frames.get(0).getVideoId());
+        Assert.assertTrue(Files.exists(videoOutputFolder));
         frameExtractionService.cleanOutput(frames.get(0).getVideoId())
                 .toObservable().toBlocking().subscribe();
 
-        boolean hasChildren = Files.newDirectoryStream(outputPath)
-                .iterator().hasNext();
-        Assert.assertTrue(!hasChildren);
 
-
+        Assert.assertTrue(Files.notExists(videoOutputFolder));
     }
 
 
@@ -75,7 +76,7 @@ public class FFMpegFrameExtractionServiceTest {
                 if (!Files.exists(tempDir)) {
                     Files.createDirectory(tempDir);
                 }
-                return new FFMpegFrameExtractionService(tempDir);
+                return new FFMpegFrameExtractionService(tempDir, new SimpleVideoStateManager());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

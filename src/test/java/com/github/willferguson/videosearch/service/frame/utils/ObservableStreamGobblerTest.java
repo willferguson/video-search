@@ -1,35 +1,29 @@
-package test;
+package com.github.willferguson.videosearch.service.frame.utils;
 
-import com.github.willferguson.videosearch.service.frame.ffmpeg.ObservableStreamGobbler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
 /**
  * Created by will on 14/10/2016.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes= StreamTest.Config.class)
-public class StreamTest {
+@SpringApplicationConfiguration(classes= ObservableStreamGobblerTest.Config.class)
+public class ObservableStreamGobblerTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(StreamTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(ObservableStreamGobblerTest.class);
 
     @Autowired
     ResourceLoader resourceLoader;

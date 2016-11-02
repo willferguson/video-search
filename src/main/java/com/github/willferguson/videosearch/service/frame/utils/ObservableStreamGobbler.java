@@ -1,4 +1,4 @@
-package com.github.willferguson.videosearch.service.frame.ffmpeg;
+package com.github.willferguson.videosearch.service.frame.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +30,14 @@ public class ObservableStreamGobbler {
                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                     return new BufferedReader(inputStreamReader);
                 },
-                (reader) -> StringObservable
-                                    .from(reader),
+                (reader) -> {
+                    return StringObservable
+                            .from(reader);
+                },
                 reader -> {
                     try {
                         reader.close();
+                        inputStream.close();
                     } catch (IOException e) {
                         throw new RuntimeException("Could not close Reader", e);
                     }

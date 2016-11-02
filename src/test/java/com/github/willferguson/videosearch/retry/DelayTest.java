@@ -1,4 +1,4 @@
-package test.retry;
+package com.github.willferguson.videosearch.retry;
 
 import com.github.willferguson.videosearch.retry.delay.Delay;
 import org.junit.Assert;
