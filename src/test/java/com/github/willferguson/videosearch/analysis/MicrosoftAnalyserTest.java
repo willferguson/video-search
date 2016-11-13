@@ -65,7 +65,7 @@ public class MicrosoftAnalyserTest {
 
     @Configuration
     @PropertySources({
-            @PropertySource("classpath:microsoft.credentials.properties"),
+            @PropertySource("classpath:microsoft-credentials.properties"),
             @PropertySource("classpath:application.properties")
     })
     public static class Config {
