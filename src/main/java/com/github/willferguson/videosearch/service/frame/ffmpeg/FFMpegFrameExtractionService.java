@@ -19,11 +19,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 /**
- * Starting extraction returns videoId - extraction runs in background
- * Once extraction is com
+ *
  * Created by will on 25/09/2016.
  */
 
@@ -37,6 +35,7 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
             "-vf", "select=eq(pict_type\\,I)",
             "-an", "-vsync", "0", "img_%d.jpeg", "-loglevel debug");
 
+    private static String contentType = "image/jpeg";
     private Path workingDirectory;
     private VideoStateManager videoStateManager;
 
@@ -76,6 +75,7 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
      * @return
      */
     public Observable<Frame> extractFrames(String videoId, InputStream videoFile) {
+        logger.debug("Starting frame extraction for video {}", videoId);
         //Execute the process
         return runProcess(videoId, videoFile)//then when that's completed, consume the output file
                 .andThen(loadFrames(videoId));
@@ -85,6 +85,7 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
     private Observable<Frame> loadFrames(String videoId) {
 
         try {
+            logger.debug("Reading frame information for video {}", videoId);
             return ObservableStreamGobbler.gobbleByLine(new FileInputStream(loadStdOutFile(videoId).toFile()))
                     .filter(line -> line.contains("select:1") && line.contains("pts:"))
                     //Split about the space and return the one with the timestamp (t:1234)
@@ -118,7 +119,7 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
 
                                 logger.info("Extracting frame {} for video {} with timestamp {}", frameId, videoId, timestamp);
                                 try {
-                                    return new Frame(videoId, frameId, timestamp, new FileInputStream(file));
+                                    return new Frame(videoId, frameId, timestamp, contentType, new FileInputStream(file));
                                 } catch (Exception e) {
                                     throw new RuntimeException(e);
                                 }
@@ -141,7 +142,9 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
             //Execute the task, resulting in frames, and the stdout / err output file.
             ProcessBuilder builder = new ProcessBuilder();
             //Create output folder for this job
-            Path videoOutputDirectory = Files.createDirectory(Paths.get(workingDirectory.toString(), videoId));
+            Path videoOutputDirectory = workingDirectory.resolve(videoId);
+            logger.debug("Creating output directory for video at {}", videoOutputDirectory.toString());
+            Files.createDirectory(videoOutputDirectory);
             builder.directory(videoOutputDirectory.toFile());
             builder.redirectErrorStream(true);
 

@@ -11,6 +11,7 @@ import java.util.Set;
 /*
  * Given a single input image, this dispatches the image to multiple metadata extractors
  * and aggregates the results into a single metadata structure
+ * TODO - Need to handle tag clashing
  * Created by will on 27/09/2016.
  */
 @Component

@@ -17,7 +17,17 @@ public class Video {
 
     @Id
     private String uuid;
+    private String filename;
     private Status status;
+
+    public Video() {
+    }
+
+    public Video(String uuid, String filename, Status status) {
+        this.uuid = uuid;
+        this.filename = filename;
+        this.status = status;
+    }
 
     public String getUuid() {
         return uuid;
@@ -33,5 +43,22 @@ public class Video {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    @Override
+    public String toString() {
+        return "Video{" +
+                "uuid='" + uuid + '\'' +
+                ", filename='" + filename + '\'' +
+                ", status=" + status +
+                '}';
     }
 }

@@ -1,8 +1,12 @@
 package com.github.willferguson.videosearch.service.analysis;
 
+import com.github.willferguson.videosearch.model.FrameAttribute;
+import rx.Observable;
+import rx.Single;
+
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by will on 02/10/2016.
@@ -19,11 +23,11 @@ public interface ImageAnalyser {
      * @param analysisTypes
      * @return
      */
-    Map<String, Object> generateMetadata(
+    Single<Map<String, Set<FrameAttribute>>> generateMetadata(
             InputStream inputStream,
             String contentType,
             long contentLength,
-            List<String> analysisTypes);
+            Set<String> analysisTypes);
 
     /**
      * Returns the set of "analysis types", jobs which this analyzer can perform.
@@ -32,5 +36,5 @@ public interface ImageAnalyser {
      * @return
      */
 
-    List<String> getAnalysisTypes();
+    Set<String> getAnalysisTypes();
 }

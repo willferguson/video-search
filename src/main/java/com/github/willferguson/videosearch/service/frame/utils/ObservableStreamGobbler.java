@@ -30,10 +30,7 @@ public class ObservableStreamGobbler {
                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                     return new BufferedReader(inputStreamReader);
                 },
-                (reader) -> {
-                    return StringObservable
-                            .from(reader);
-                },
+                StringObservable::from,
                 reader -> {
                     try {
                         reader.close();

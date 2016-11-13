@@ -35,7 +35,7 @@ public interface ContentStore {
 
     Single<InputStream> retrieveFrame(String videoId, String frameId);
 
-    Single<Boolean> isRedirectable();
+    boolean isRedirectable();
 
     Single<URL> redirectToFrame(String videoId, String frameId);
 

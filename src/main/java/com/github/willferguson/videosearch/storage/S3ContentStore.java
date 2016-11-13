@@ -36,8 +36,8 @@ public class S3ContentStore implements ContentStore {
     }
 
     @Override
-    public Single<Boolean> isRedirectable() {
-        return null;
+    public boolean isRedirectable() {
+        return true;
     }
 
     @Override

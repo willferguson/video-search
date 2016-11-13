@@ -28,7 +28,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.github.willferguson" level="INFO" additivity="false">
+    <logger name="com.github.willferguson" level="DEBUG" additivity="false">
         <appender-ref ref="FILESERVER" />
         <appender-ref ref="STDOUT" />
 

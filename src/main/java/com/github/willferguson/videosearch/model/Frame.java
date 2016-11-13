@@ -1,30 +1,52 @@
 package com.github.willferguson.videosearch.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Simple frame with timestamp
+ * Simple frame with timestamp.
+ *
+ * TODO - Need to be able to handle more structured data on a frame.
+ * EG - Face detection - emotions for specific faces, safe search detection, dominant colours etc
+ *
+ *
  * Created by will on 27/09/2016.
  */
 @Document(indexName = "video", type = "frame")
 public class Frame {
 
-    private final String videoId;
+    @Id
     private final String frameId;
+    private final String videoId;
     private final String timestamp;
+    private final String contentType;
+
+    @Transient
+    @JsonIgnore
     private InputStream frameData;
 
-    //TODO To begin with we'll just use a list of strings, but we'll need something more expressive
-    private List<String> metadata;
+    //Provides tag analysis of the frame.
+    private Map<String, Set<FrameAttribute>> metadata;
 
-    public Frame(String videoId, String frameId, String timestamp, InputStream frameData) {
+    public Frame(String frameId, String videoId, String timestamp, String contentType) {
+        this.frameId = frameId;
+        this.videoId = videoId;
+        this.timestamp = timestamp;
+        this.contentType = contentType;
+    }
+
+    public Frame(String videoId, String frameId, String timestamp, String contentType, InputStream frameData) {
         this.videoId = videoId;
         this.frameId = frameId;
         this.timestamp = timestamp;
+        this.contentType = contentType;
         this.frameData = frameData;
     }
 
@@ -48,11 +70,15 @@ public class Frame {
         this.frameData = frameData;
     }
 
-    public List<String> getMetadata() {
+    public String getContentType() {
+        return contentType;
+    }
+
+    public Map<String, Set<FrameAttribute>> getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(List<String> metadata) {
+    public void setMetadata(Map<String, Set<FrameAttribute>> metadata) {
         this.metadata = metadata;
     }
 }

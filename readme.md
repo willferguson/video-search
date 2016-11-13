@@ -8,7 +8,7 @@ Ingest flow works something like:
 * Create basic document in elastic
 * Return to caller with video id. 
 
-* On "new video" event from S3"
+* On "new video" event from storage
 * Send for frame extraction (thread pool)
 * On process start set status to EXTRACTING_FRAMES
 * When finished set status to FRAMES_EXTRACTED
