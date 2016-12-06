@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
@@ -26,7 +27,7 @@ import java.util.UUID;
  * Created by will on 15/10/2016.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes= FFMpegFrameExtractionServiceTest.Config.class)
+@SpringBootTest(classes= FFMpegFrameExtractionServiceTest.Config.class)
 public class FFMpegFrameExtractionServiceTest {
 
     private final static String OUTPUT_DIR = "/tmp/frame_extraction";

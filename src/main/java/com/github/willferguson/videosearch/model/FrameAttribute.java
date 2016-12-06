@@ -2,6 +2,9 @@ package com.github.willferguson.videosearch.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 /**
  * Encapsulates a single attribute of an image,
@@ -13,6 +16,8 @@ import org.slf4j.LoggerFactory;
  */
 public class FrameAttribute {
 
+    //We dont' want to tokenize this field
+    @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
     private String name;
     private double confidence;
 

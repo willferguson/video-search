@@ -5,6 +5,7 @@ import com.github.willferguson.videosearch.service.analysis.GoogleVisionAnalyzer
 import com.github.willferguson.videosearch.service.analysis.ImageAnalyser;
 import com.github.willferguson.videosearch.service.analysis.MicrosoftEmotionAnalyzer;
 import com.github.willferguson.videosearch.service.analysis.MicrosoftVisionAnalyzer;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import java.util.Set;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes= GoogleVisionAnalyserTest.Config.class)
+@Ignore
 public class GoogleVisionAnalyserTest {
 
     private static final Logger logger = LoggerFactory.getLogger(GoogleVisionAnalyserTest.class);
@@ -64,8 +66,6 @@ public class GoogleVisionAnalyserTest {
             @PropertySource("classpath:application.properties")
     })
     public static class Config {
-
-
 
         @Bean(name = "vision")
         public ImageAnalyser visionService(@Value("${google.storage.bucket.name}") String bucketName,

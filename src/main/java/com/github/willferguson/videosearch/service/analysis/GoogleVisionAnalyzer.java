@@ -39,9 +39,8 @@ public class GoogleVisionAnalyzer implements ImageAnalyser {
     private Storage storage;
     private Vision vision;
 
-    @Autowired
-    public GoogleVisionAnalyzer(@Value("${google.bucket}") String bucketName,
-                                @Value("${google.application.name}") String applicationName,
+    public GoogleVisionAnalyzer(String bucketName,
+                                String applicationName,
                                 ResourceLoader resourceLoader) {
         try {
             this.bucketName = bucketName;
@@ -117,6 +116,8 @@ public class GoogleVisionAnalyzer implements ImageAnalyser {
                     .stream()
                     .map(Type::valueOf)
                     .map(type -> type.extract(response))
+                    //Want to remove when we have no values for the key.
+                    .filter(entry -> !entry.getValue().isEmpty())
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
 

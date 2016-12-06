@@ -7,6 +7,7 @@ import com.github.willferguson.videosearch.service.frame.FrameExtractionService;
 import com.github.willferguson.videosearch.state.VideoStateManager;
 import com.github.willferguson.videosearch.service.frame.utils.ObservableIOPipe;
 import com.github.willferguson.videosearch.service.frame.utils.ObservableStreamGobbler;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Completable;
@@ -31,9 +32,10 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
 
     private static final String FFMPEG_CMD = "/Users/will/dev/video-search/spit.sh";
     private static final List<String> FFMPEG_ARGS = Arrays.asList(
-            "-i", "pipe:0",
             "-vf", "select=eq(pict_type\\,I)",
             "-an", "-vsync", "0", "img_%d.jpeg", "-loglevel debug");
+
+    private static final String VIDEO_FILE_NAME = "video";
 
     private static String contentType = "image/jpeg";
     private Path workingDirectory;
@@ -71,12 +73,12 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
      * Extracts frame date / info, and returns a stream of {@link Frame} objects
      * describing the frame input stream and timestamp.
      *
-     * @param videoFile The video file to process.
+     * @param videoFile The video file to handleUpload.
      * @return
      */
     public Observable<Frame> extractFrames(String videoId, InputStream videoFile) {
         logger.debug("Starting frame extraction for video {}", videoId);
-        //Execute the process
+        //Execute the handleUpload
         return runProcess(videoId, videoFile)//then when that's completed, consume the output file
                 .andThen(loadFrames(videoId));
 
@@ -119,7 +121,7 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
 
                                 logger.info("Extracting frame {} for video {} with timestamp {}", frameId, videoId, timestamp);
                                 try {
-                                    return new Frame(videoId, frameId, timestamp, contentType, new FileInputStream(file));
+                                    return new Frame(videoId, frameId, timestamp, contentType, new FileInputStream(file), file.length());
                                 } catch (Exception e) {
                                     throw new RuntimeException(e);
                                 }
@@ -137,14 +139,30 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
         return frameName.substring(4, frameName.length() - 5);
     }
 
-    private Completable runProcess(String videoId, InputStream videoStream) {
+    private Path createVideoOutputDirectory(String videoId) {
         try {
-            //Execute the task, resulting in frames, and the stdout / err output file.
-            ProcessBuilder builder = new ProcessBuilder();
-            //Create output folder for this job
             Path videoOutputDirectory = workingDirectory.resolve(videoId);
             logger.debug("Creating output directory for video at {}", videoOutputDirectory.toString());
             Files.createDirectory(videoOutputDirectory);
+            return videoOutputDirectory;
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private Completable runProcess(String videoId, InputStream videoStream) {
+        try {
+            //Create output folder for this job
+            Path videoOutputDirectory = createVideoOutputDirectory(videoId);
+
+            //Write the input video down. We have to do this as some video sources (mov, mp4)
+            //don't like streaming in via stdIn
+            Path videoFile = videoOutputDirectory.resolve(VIDEO_FILE_NAME);
+            FileOutputStream fileOutputStream = new FileOutputStream(videoFile.toFile());
+            IOUtils.copy(videoStream, fileOutputStream);
+
+            //Setup the process execution
+            ProcessBuilder builder = new ProcessBuilder();
             builder.directory(videoOutputDirectory.toFile());
             builder.redirectErrorStream(true);
 
@@ -153,32 +171,35 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
             builder.redirectOutput(stdOutFile.toFile());
             List<String> commandAndArgs = new ArrayList<>();
             commandAndArgs.add(FFMPEG_CMD);
+            commandAndArgs.add("-i");
+            commandAndArgs.add(pathToVideoFile(videoId));
             commandAndArgs.addAll(FFMPEG_ARGS);
             builder.command(commandAndArgs);
 
-
             logger.info("Executing command {}", commandAndArgs.toString());
-
             Process process = builder.start();
 
-            OutputStream stdIn = process.getOutputStream();
 
-            return ObservableIOPipe.traditionalPipe(videoStream, stdIn)
-                    .andThen(Completable.fromAction(() -> {
+
+            return Completable.fromAction(() -> {
                         try {
-                            logger.info("Waiting for process to exit");
+                            logger.info("Waiting for handleUpload to exit");
                             process.waitFor();
                             logger.info("Process Exited");
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
-                    }));
+                    });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-        //Loads the standard out file, creating if it doesn't exist.
+    private String pathToVideoFile(String videoId) {
+        return Paths.get(workingDirectory.toString(), videoId, VIDEO_FILE_NAME).toString();
+    }
+
+    //Loads the standard out file, creating if it doesn't exist.
     private Path loadStdOutFile(String videoId) {
         Path stdOutFile = Paths.get(workingDirectory.toString(), videoId, "out.txt");
         try {

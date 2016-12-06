@@ -114,13 +114,13 @@ public class LocalContentStore implements ContentStore {
     }
 
     @Override
-    public boolean isRedirectable() {
+    public boolean isExternallyAvailable() {
         return false;
     }
 
     @Override
-    public Single<URL> redirectToFrame(String videoId, String frameId) {
-        return Single.error(new UnsupportedOperationException("Files Entities are not redirectable"));
+    public Single<URL> constructExternalURL(String videoId, String frameId) {
+        return Single.error(new UnsupportedOperationException("Not available externally"));
     }
 
     private Path getVideoDirectory(String videoId) {

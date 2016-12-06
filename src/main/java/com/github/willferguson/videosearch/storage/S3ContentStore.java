@@ -36,12 +36,12 @@ public class S3ContentStore implements ContentStore {
     }
 
     @Override
-    public boolean isRedirectable() {
+    public boolean isExternallyAvailable() {
         return true;
     }
 
     @Override
-    public Single<URL> redirectToFrame(String videoId, String frameId) {
+    public Single<URL> constructExternalURL(String videoId, String frameId) {
         return null;
     }
 }

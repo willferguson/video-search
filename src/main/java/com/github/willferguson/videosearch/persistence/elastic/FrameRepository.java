@@ -3,6 +3,8 @@ package com.github.willferguson.videosearch.persistence.elastic;
 import com.github.willferguson.videosearch.model.Frame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface FrameRepository extends ElasticsearchRepository<Frame, String> {
+
+    Page<Frame> findByVideoId(String videoId, Pageable pageable);
 
 
 }

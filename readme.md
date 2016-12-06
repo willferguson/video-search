@@ -1,3 +1,21 @@
+High Level Functionality
+
+* Can ingest video, split into frames and submit each frames to Google / Microsoft etc for analysis. 
+
+* Can view a list of all videos, with aggregations for tags. 
+* Can select a specific tag aggregation, which searches for all frames with that tag and returns results & aggregations. 
+* Can directly search a video metadata - name, uuid - this will return hits & facets for tag aggregations. 
+
+
+* Search functionality
+** get all aggregations with hits
+** get aggrega
+
+
+
+
+
+
 Basic outline of Video Metadata extraction and searching. 
 
 Ingest flow works something like:
@@ -28,6 +46,9 @@ Currently identified 3 services for later separation
 * Frame extraction service - receives video, breaks into frames, indexes, stores
 * Image Analysis service - pulls from storage, generates metadata, indexes
 * Index service - indexes metadata, enables later searching.
+
+
+
 
 
 

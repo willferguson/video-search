@@ -5,6 +5,7 @@ import com.github.willferguson.videosearch.service.analysis.ImageAnalyser;
 import com.github.willferguson.videosearch.service.analysis.MicrosoftEmotionAnalyzer;
 import com.github.willferguson.videosearch.service.analysis.MicrosoftVisionAnalyzer;
 import com.netflix.discovery.converters.Auto;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import java.util.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes= MicrosoftAnalyserTest.Config.class)
+@Ignore
 public class MicrosoftAnalyserTest {
 
     @Autowired

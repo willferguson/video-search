@@ -35,9 +35,14 @@ public interface ContentStore {
 
     Single<InputStream> retrieveFrame(String videoId, String frameId);
 
-    boolean isRedirectable();
+    /**
+     * If the content is available externally via some common protocol - EG available in S3 or some HTTP webserver
+     * @return
+     */
+    boolean isExternallyAvailable();
 
-    Single<URL> redirectToFrame(String videoId, String frameId);
+
+    Single<URL> constructExternalURL(String videoId, String frameId);
 
 
 }

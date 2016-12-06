@@ -4,8 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,31 +27,33 @@ import java.util.Set;
 public class Frame {
 
     @Id
-    private final String frameId;
-    private final String videoId;
-    private final String timestamp;
-    private final String contentType;
+    private String frameId;
+    private String videoId;
+    private String timestamp;
+    private String contentType;
+    private long contentLength;
+
+    private URL url;
 
     @Transient
     @JsonIgnore
     private InputStream frameData;
 
     //Provides tag analysis of the frame.
-    private Map<String, Set<FrameAttribute>> metadata;
+    @Field(type = FieldType.Nested)
+    private Set<AttributeGroup> metadata;
 
-    public Frame(String frameId, String videoId, String timestamp, String contentType) {
-        this.frameId = frameId;
-        this.videoId = videoId;
-        this.timestamp = timestamp;
-        this.contentType = contentType;
+
+    public Frame() {
     }
 
-    public Frame(String videoId, String frameId, String timestamp, String contentType, InputStream frameData) {
+    public Frame(String videoId, String frameId, String timestamp, String contentType, InputStream frameData, long contentLength) {
         this.videoId = videoId;
         this.frameId = frameId;
         this.timestamp = timestamp;
         this.contentType = contentType;
         this.frameData = frameData;
+        this.contentLength = contentLength;
     }
 
     public String getVideoId() {
@@ -74,11 +80,44 @@ public class Frame {
         return contentType;
     }
 
-    public Map<String, Set<FrameAttribute>> getMetadata() {
+    public long getContentLength() {
+        return contentLength;
+    }
+
+    public void setFrameId(String frameId) {
+        this.frameId = frameId;
+    }
+
+    public void setVideoId(String videoId) {
+        this.videoId = videoId;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setContentLength(long contentLength) {
+        this.contentLength = contentLength;
+    }
+
+    public Set<AttributeGroup> getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(Map<String, Set<FrameAttribute>> metadata) {
+    public void setMetadata(Set<AttributeGroup> metadata) {
         this.metadata = metadata;
     }
+
+    public URL getUrl() {
+        return url;
+    }
+
+    public void setUrl(URL url) {
+        this.url = url;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.github.willferguson.videosearch.service.frame.utils;
 
+import com.github.willferguson.videosearch.service.analysis.ImageAnalyser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Completable;
@@ -7,10 +8,9 @@ import rx.Observable;
 import rx.observables.StringObservable;
 import rx.schedulers.Schedulers;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -46,11 +46,25 @@ public class ObservableIOPipe {
 
                 });
     }
-
+    //TODO - Implement
     public static Completable rxPipe(InputStream inputStream, OutputStream outputStream) {
+        Set<ImageAnalyser> analysers = new HashSet<>();
+        //Create array of pipedoutputstreams, & inptu streams connected.
+        //Push input to analyser
+        //for each outputstream, write bytes.
+
+
         return StringObservable.from(inputStream, 1024 * 1024)
+
                 .map(byteBuffer -> {
                     try {
+                        PipedOutputStream pipedOutputStream = new PipedOutputStream();
+                        PipedInputStream pipedInputStream = new PipedInputStream(pipedOutputStream);
+                        pipedOutputStream.write(byteBuffer);
+
+
+
+
                         //logger.info("Writing buffer size {}", byteBuffer.length);
                         outputStream.write(byteBuffer);
                         return outputStream;

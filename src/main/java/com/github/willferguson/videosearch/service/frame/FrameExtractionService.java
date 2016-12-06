@@ -23,7 +23,7 @@ public interface FrameExtractionService {
     /**
      * Extracts frames with timestamp for the given video
      *
-     * @param videoFile The video file to process.
+     * @param videoFile The video file to handleUpload.
      * @return a Single which
      */
     Observable<Frame> extractFrames(String videoId, InputStream videoFile);

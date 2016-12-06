@@ -3,7 +3,11 @@ package com.github.willferguson.videosearch.persistence.elastic;
 import com.github.willferguson.videosearch.Application;
 import com.github.willferguson.videosearch.model.Status;
 import com.github.willferguson.videosearch.model.Video;
+import org.elasticsearch.client.Client;
+import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.node.NodeBuilder;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,6 +29,8 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.UUID;
 
 /**
@@ -81,23 +87,22 @@ public class VideoRepositoryTest {
 
 
         @Bean
-        public NodeBuilder nodeBuilder() {
-            return new NodeBuilder();
+        public ElasticsearchOperations elasticsearchTemplate() {
+            return new ElasticsearchTemplate(client());
         }
 
         @Bean
-        public ElasticsearchOperations elasticsearchTemplate() {
-            Settings.Builder elasticsearchSettings =
-                    Settings.settingsBuilder()
-                            .put("http.enabled", "false")
-                            .put("path.data", ELASTIC_SEARCH_DATA_DIR)
-                            .put("path.home", ELASTIC_SEARCH_HOME_DIR);
+        public Client client()  {
+            TransportClient client= TransportClient.builder().build();
+            try {
+                TransportAddress address = new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300);
+                client.addTransportAddress(address);
+                return client;
 
-            return new ElasticsearchTemplate(nodeBuilder()
-                    .local(true)
-                    .settings(elasticsearchSettings.build())
-                    .node()
-                    .client());
+            }
+            catch (UnknownHostException e) {
+                throw new RuntimeException(e);
+            }
         }
 
     }

@@ -19,5 +19,8 @@ public class AnalyzerRegistry {
         registry.put(imageAnalyser.getClass().getName(), imageAnalyser);
     }
 
+    public static Map<String, ImageAnalyser> getRegistry() {
+        return registry;
+    }
 
 }

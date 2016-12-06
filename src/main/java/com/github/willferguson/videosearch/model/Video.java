@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import java.net.URL;
+
 /**
  * Represents a video, persisted in elastic.
  *
@@ -19,6 +21,7 @@ public class Video {
     private String uuid;
     private String filename;
     private Status status;
+    private URL videoURL;
 
     public Video() {
     }
@@ -51,6 +54,14 @@ public class Video {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public URL getVideoURL() {
+        return videoURL;
+    }
+
+    public void setVideoURL(URL videoURL) {
+        this.videoURL = videoURL;
     }
 
     @Override
