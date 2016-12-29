@@ -15,9 +15,20 @@
                 "path": "metadata.attributes"
               },
               "aggs": {
-                "attribute_name": {
-                  "terms": {
-                    "field": "metadata.attributes.name"
+                "attribute_name_filter": {
+                  "filter": {
+                    "range": {
+                      "metadata.attributes.confidence": {
+                        "gte": "0.5"
+                      }
+                    }
+                  },
+                  "aggs": {
+                    "attribute_name": {
+                      "terms": {
+                        "field": "metadata.attributes.name"
+                      }
+                    }
                   }
                 }
               }
@@ -28,4 +39,3 @@
     }
   }
 }
-

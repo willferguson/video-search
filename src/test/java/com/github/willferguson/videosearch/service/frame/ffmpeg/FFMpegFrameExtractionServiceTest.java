@@ -2,7 +2,6 @@ package com.github.willferguson.videosearch.service.frame.ffmpeg;
 
 import com.github.willferguson.videosearch.model.Frame;
 import com.github.willferguson.videosearch.service.frame.FrameExtractionService;
-import com.github.willferguson.videosearch.state.SimpleVideoStateManager;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,7 +76,7 @@ public class FFMpegFrameExtractionServiceTest {
                 if (!Files.exists(tempDir)) {
                     Files.createDirectory(tempDir);
                 }
-                return new FFMpegFrameExtractionService(tempDir, new SimpleVideoStateManager());
+                return new FFMpegFrameExtractionService(tempDir);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

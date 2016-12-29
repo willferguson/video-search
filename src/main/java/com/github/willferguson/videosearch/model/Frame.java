@@ -20,7 +20,6 @@ import java.util.Set;
  * TODO - Need to be able to handle more structured data on a frame.
  * EG - Face detection - emotions for specific faces, safe search detection, dominant colours etc
  *
- *
  * Created by will on 27/09/2016.
  */
 @Document(indexName = "video", type = "frame")
@@ -28,6 +27,8 @@ public class Frame {
 
     @Id
     private String frameId;
+    //We don't want partial video id matching
+    @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
     private String videoId;
     private String timestamp;
     private String contentType;

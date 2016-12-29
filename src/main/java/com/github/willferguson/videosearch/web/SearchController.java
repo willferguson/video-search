@@ -21,4 +21,8 @@ public class SearchController {
     public ResponseEntity<?> fetchAggregations() {
         return null;
     }
+
+    public ResponseEntity<?> searchAll() {
+        return null;
+    }
 }

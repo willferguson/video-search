@@ -17,9 +17,6 @@ import java.io.InputStream;
  */
 public interface FrameExtractionService {
 
-
-    Single<Status> checkStatus(String videoId);
-
     /**
      * Extracts frames with timestamp for the given video
      *

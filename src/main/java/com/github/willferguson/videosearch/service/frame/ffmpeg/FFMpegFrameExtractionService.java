@@ -4,8 +4,6 @@ import com.github.willferguson.videosearch.exceptions.NoSuchVideoException;
 import com.github.willferguson.videosearch.model.Frame;
 import com.github.willferguson.videosearch.model.Status;
 import com.github.willferguson.videosearch.service.frame.FrameExtractionService;
-import com.github.willferguson.videosearch.state.VideoStateManager;
-import com.github.willferguson.videosearch.service.frame.utils.ObservableIOPipe;
 import com.github.willferguson.videosearch.service.frame.utils.ObservableStreamGobbler;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -39,11 +37,9 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
 
     private static String contentType = "image/jpeg";
     private Path workingDirectory;
-    private VideoStateManager videoStateManager;
 
 
-    public FFMpegFrameExtractionService(Path workingDirectory, VideoStateManager videoStateManager) {
-        this.videoStateManager = videoStateManager;
+    public FFMpegFrameExtractionService(Path workingDirectory) {
 //        if (!Files.isWritable(workingDirectory)) {
 //            throw new RuntimeException("Can not write to output directory");
 //        }
@@ -61,13 +57,6 @@ public class FFMpegFrameExtractionService implements FrameExtractionService {
             }
         });
     }
-
-    @Override
-    public Single<Status> checkStatus(String videoId) {
-        return videoStateManager.findStatus(videoId);
-    }
-
-
 
     /**
      * Extracts frame date / info, and returns a stream of {@link Frame} objects

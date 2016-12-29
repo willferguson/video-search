@@ -1,8 +1,6 @@
 package com.github.willferguson.videosearch;
 
 import com.github.willferguson.videosearch.service.analysis.*;
-import com.github.willferguson.videosearch.service.analysis.fake.AbstractDummyAnalyser;
-import com.github.willferguson.videosearch.state.SimpleVideoStateManager;
 import com.github.willferguson.videosearch.service.frame.ffmpeg.FFMpegFrameExtractionService;
 import com.github.willferguson.videosearch.service.frame.FrameExtractionService;
 import com.github.willferguson.videosearch.storage.ContentStore;
@@ -72,7 +70,7 @@ public class Application {
     //TODO Change to load the dir from config server
     @Bean
     public FrameExtractionService frameExtractionService() {
-        return new FFMpegFrameExtractionService(Paths.get("/Users/will/tmp/extraction"), new SimpleVideoStateManager());
+        return new FFMpegFrameExtractionService(Paths.get("/Users/will/tmp/extraction"));
     }
 
     //TODO Change to define the content store from config server
