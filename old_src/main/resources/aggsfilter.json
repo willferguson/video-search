@@ -1,0 +1,41 @@
+{
+  "aggs": {
+    "metadata": {
+      "nested": {
+        "path": "metadata"
+      },
+      "aggs": {
+        "attribute_group_name": {
+          "terms": {
+            "field": "metadata.name"
+          },
+          "aggs": {
+            "attributes": {
+              "nested": {
+                "path": "metadata.attributes"
+              },
+              "aggs": {
+                "attribute_name_filter": {
+                  "filter": {
+                    "range": {
+                      "metadata.attributes.confidence": {
+                        "gte": "0.5"
+                      }
+                    }
+                  },
+                  "aggs": {
+                    "attribute_name": {
+                      "terms": {
+                        "field": "metadata.attributes.name"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

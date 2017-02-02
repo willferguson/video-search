@@ -1,0 +1,36 @@
+buildscript {
+    ext {
+        springBootVersion = '1.4.1.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+version '1.0-SNAPSHOT'
+apply plugin: 'spring-boot'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.SR1'
+    }
+}
+
+
+dependencies {
+
+    compile 'org.springframework.cloud:spring-cloud-starter-config'
+    compile 'org.springframework.cloud:spring-cloud-starter-eureka'
+
+}
+
+

@@ -1,2 +1,9 @@
 rootProject.name = 'video-search'
+include 'video-storage'
+include 'common'
+include 'frame-extraction'
+include 'discovery-service'
+include 'config-service'
+include 'search-service'
+include 'analysis-service'
 

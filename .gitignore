@@ -73,6 +73,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-/src/main/resources/google-credentials.json
-/src/main/resources/google.properties
-/src/main/resources/microsoft-credentials.properties
+/old_src/main/resources/google-credentials.json
+/old_src/main/resources/google.properties
+/old_src/main/resources/microsoft-credentials.properties
