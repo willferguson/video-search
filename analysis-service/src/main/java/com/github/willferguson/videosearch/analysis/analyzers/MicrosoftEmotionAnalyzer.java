@@ -1,10 +1,10 @@
-package com.github.willferguson.videosearch.analysis;
+package com.github.willferguson.videosearch.analysis.analyzers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.willferguson.videosearch.analysis.http.HttpClient;
-import com.github.willferguson.videosearch.analysis.model.FrameAttribute;
+import com.github.willferguson.videosearch.analysis.analyzers.http.HttpClient;
+import com.github.willferguson.videosearch.analysis.model.ImageAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -39,7 +39,7 @@ public class MicrosoftEmotionAnalyzer implements ImageAnalyser {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public Single<Map<String, Set<FrameAttribute>>> generateMetadata(InputStream inputStream, String contentType, long contentLength, @Nullable Set<String> analysisTypes) {
+    public Single<Map<String, Set<ImageAttribute>>> generateMetadata(InputStream inputStream, String contentType, long contentLength, @Nullable Set<String> analysisTypes) {
 
             return Single.fromCallable(() -> {
                 try {
@@ -51,16 +51,16 @@ public class MicrosoftEmotionAnalyzer implements ImageAnalyser {
 
                     ArrayNode arrayNode = (ArrayNode) objectMapper.readTree(response);
                     ObjectNode scores = (ObjectNode) arrayNode.get(0).get("scores");
-                    Set<FrameAttribute> frameAttributes = StreamSupport.stream(Spliterators.spliterator(scores.fields(), scores.size(), Spliterator.DISTINCT), false)
+                    Set<ImageAttribute> imageAttributes = StreamSupport.stream(Spliterators.spliterator(scores.fields(), scores.size(), Spliterator.DISTINCT), false)
                             .map(entry -> {
                                 String name = entry.getKey();
                                 double confidence = entry.getValue().asDouble();
-                                return new FrameAttribute(name, confidence);
+                                return new ImageAttribute(name, confidence);
                             })
                             .collect(Collectors.toSet());
 
-                    Map<String, Set<FrameAttribute>> map = new HashMap<>();
-                    map.put(Types.EMOTION.toString().toLowerCase(), frameAttributes);
+                    Map<String, Set<ImageAttribute>> map = new HashMap<>();
+                    map.put(Types.EMOTION.toString().toLowerCase(), imageAttributes);
                     return map;
 
                 } catch (IOException e) {

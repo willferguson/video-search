@@ -1,7 +1,7 @@
-package com.github.willferguson.videosearch.analysis;
+package com.github.willferguson.videosearch.analysis.analyzers;
 
 import com.amazonaws.util.IOUtils;
-import com.github.willferguson.videosearch.analysis.model.FrameAttribute;
+import com.github.willferguson.videosearch.analysis.model.ImageAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class ImageAnalysisAggregator implements ImageAnalyser {
     private static final Logger logger = LoggerFactory.getLogger(ImageAnalysisAggregator.class);
 
     @Override
-    public Single<Map<String, Set<FrameAttribute>>> generateMetadata(InputStream inputStream, String contentType, long contentLength, Set<String> analysisTypes) {
+    public Single<Map<String, Set<ImageAttribute>>> generateMetadata(InputStream inputStream, String contentType, long contentLength, Set<String> analysisTypes) {
         //TODO - This is terribly memory intensive - change to something a little more elegant!
         try {
             byte[] bytes = IOUtils.toByteArray(inputStream);
@@ -39,7 +39,7 @@ public class ImageAnalysisAggregator implements ImageAnalyser {
                         logger.debug("Processing metadata for types {}", validTypes);
                         return imageAnalyser.generateMetadata(new ByteArrayInputStream(bytes), contentType, contentLength, validTypes).toObservable();
                     })
-                    .collect(() -> (Map<String, Set<FrameAttribute>>)new HashMap<String, Set<FrameAttribute>>(), (stringSetMap, m) -> {
+                    .collect(() -> (Map<String, Set<ImageAttribute>>)new HashMap<String, Set<ImageAttribute>>(), (stringSetMap, m) -> {
                         logger.debug("Collecting analysis data {}", m);
                         stringSetMap.putAll(m);
                     })

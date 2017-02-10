@@ -1,4 +1,4 @@
-package com.github.willferguson.videosearch.analysis.http;
+package com.github.willferguson.videosearch.analysis.analyzers.http;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;

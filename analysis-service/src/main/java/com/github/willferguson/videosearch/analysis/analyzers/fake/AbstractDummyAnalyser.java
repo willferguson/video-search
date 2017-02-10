@@ -1,6 +1,6 @@
 package com.github.willferguson.videosearch.analysis.analyzers.fake;
 
-import com.github.willferguson.videosearch.analysis.ImageAnalyser;
+import com.github.willferguson.videosearch.analysis.analyzers.ImageAnalyser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,7 @@ public abstract class AbstractDummyAnalyser implements ImageAnalyser {
     private static final Logger logger = LoggerFactory.getLogger(AbstractDummyAnalyser.class);
 
     /**
-     * Reads the stream and discards the bytes.
+     * Reads the stream and discards the bytes (simulates reading the stream.
      * @param inputStream
      */
     protected void sink(InputStream inputStream) {

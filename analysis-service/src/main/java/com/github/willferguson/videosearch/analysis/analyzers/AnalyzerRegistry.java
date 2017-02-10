@@ -1,4 +1,4 @@
-package com.github.willferguson.videosearch.analysis;
+package com.github.willferguson.videosearch.analysis.analyzers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

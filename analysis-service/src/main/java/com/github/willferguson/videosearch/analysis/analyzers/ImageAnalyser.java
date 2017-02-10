@@ -1,6 +1,6 @@
-package com.github.willferguson.videosearch.analysis;
+package com.github.willferguson.videosearch.analysis.analyzers;
 
-import com.github.willferguson.videosearch.analysis.model.FrameAttribute;
+import com.github.willferguson.videosearch.analysis.model.ImageAttribute;
 import rx.Single;
 
 import java.io.InputStream;
@@ -22,7 +22,7 @@ public interface ImageAnalyser {
      * @param analysisTypes
      * @return
      */
-    Single<Map<String, Set<FrameAttribute>>> generateMetadata(
+    Single<Map<String, Set<ImageAttribute>>> generateMetadata(
             InputStream inputStream,
             String contentType,
             long contentLength,

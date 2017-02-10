@@ -11,15 +11,15 @@ import org.slf4j.LoggerFactory;
  * Created by will on 11/11/2016.
  *
  */
-public class FrameAttribute {
+public class ImageAttribute {
 
     private String name;
     private double confidence;
 
-    public FrameAttribute() {
+    public ImageAttribute() {
     }
 
-    public FrameAttribute(String name, double confidence) {
+    public ImageAttribute(String name, double confidence) {
         this.name = name;
         this.confidence = confidence;
     }
@@ -40,7 +40,7 @@ public class FrameAttribute {
         this.confidence = confidence;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(FrameAttribute.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImageAttribute.class);
 
     @Override
     public String toString() {

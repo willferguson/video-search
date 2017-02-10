@@ -1,6 +1,6 @@
-package com.github.willferguson.videosearch.analysis;
+package com.github.willferguson.videosearch.analysis.analyzers;
 
-import com.github.willferguson.videosearch.analysis.model.FrameAttribute;
+import com.github.willferguson.videosearch.analysis.model.ImageAttribute;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -36,6 +36,7 @@ public class GoogleVisionAnalyzer implements ImageAnalyser {
     private Storage storage;
     private Vision vision;
 
+    //TODO Constructing with a ResourceLoader smells. Remove
     public GoogleVisionAnalyzer(String bucketName,
                                 String applicationName,
                                 ResourceLoader resourceLoader) {
@@ -72,7 +73,7 @@ public class GoogleVisionAnalyzer implements ImageAnalyser {
     }
 
     @Override
-    public Single<Map<String, Set<FrameAttribute>>> generateMetadata(InputStream inputStream, String contentType, long contentLength, Set<String> analysisTypes) {
+    public Single<Map<String, Set<ImageAttribute>>> generateMetadata(InputStream inputStream, String contentType, long contentLength, Set<String> analysisTypes) {
 
         //Random file name so we never clash. We delete immediately after anyway
         String tempFilename = UUID.randomUUID().toString();
@@ -108,7 +109,7 @@ public class GoogleVisionAnalyzer implements ImageAnalyser {
 
         }
 
-        private Map<String, Set<FrameAttribute>> buildResponseMap(AnnotateImageResponse response, Set<String> analysisTypes) {
+        private Map<String, Set<ImageAttribute>> buildResponseMap(AnnotateImageResponse response, Set<String> analysisTypes) {
             return analysisTypes
                     .stream()
                     .map(Type::valueOf)
@@ -184,29 +185,29 @@ public class GoogleVisionAnalyzer implements ImageAnalyser {
         );
 
 
-        private Function<AnnotateImageResponse, Map.Entry<String, Set<FrameAttribute>>> extractionFunction;
+        private Function<AnnotateImageResponse, Map.Entry<String, Set<ImageAttribute>>> extractionFunction;
 
-        Type(Function<AnnotateImageResponse, Map.Entry<String, Set<FrameAttribute>>> extractionFunction) {
+        Type(Function<AnnotateImageResponse, Map.Entry<String, Set<ImageAttribute>>> extractionFunction) {
             this.extractionFunction = extractionFunction;
         }
 
-        public Map.Entry<String, Set<FrameAttribute>> extract(AnnotateImageResponse response) {
+        public Map.Entry<String, Set<ImageAttribute>> extract(AnnotateImageResponse response) {
             return extractionFunction.apply(response);
         }
 
-        private static Map.Entry<String, Set<FrameAttribute>> constructEntry(String annotationType, List<EntityAnnotation> annotations) {
+        private static Map.Entry<String, Set<ImageAttribute>> constructEntry(String annotationType, List<EntityAnnotation> annotations) {
             //Annoyingly google returns null as opposed to empty list if the analysis wasn't successful. (EG no logo)
             if (annotations == null) {
                 annotations = Collections.emptyList();
             }
-            Set<FrameAttribute> frameAttributes = annotations.stream()
+            Set<ImageAttribute> imageAttributes = annotations.stream()
                 .map(entityAnnotation -> {
                     String name = entityAnnotation.getDescription();
                     double confidence = entityAnnotation.getScore();
-                    return new FrameAttribute(name, confidence);
+                    return new ImageAttribute(name, confidence);
                 })
                 .collect(Collectors.toSet());
-            return new AbstractMap.SimpleEntry<>(annotationType, frameAttributes);
+            return new AbstractMap.SimpleEntry<>(annotationType, imageAttributes);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.github.willferguson.videosearch.analysis.analyzers.fake;
 
-import com.github.willferguson.videosearch.analysis.model.FrameAttribute;
+import com.github.willferguson.videosearch.analysis.model.ImageAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,17 +20,17 @@ public class DummyAnalyser1 extends AbstractDummyAnalyser {
     private static final Logger logger = LoggerFactory.getLogger(DummyAnalyser1.class);
 
     @Override
-    public Single<Map<String, Set<FrameAttribute>>> generateMetadata(InputStream inputStream, String contentType, long contentLength, Set<String> analysisTypes) {
+    public Single<Map<String, Set<ImageAttribute>>> generateMetadata(InputStream inputStream, String contentType, long contentLength, Set<String> analysisTypes) {
         return Single.fromCallable(() -> {
 
             //Discard the input stream
             super.sink(inputStream);
-            Map<String, Set<FrameAttribute>> map = new HashMap<>();
-            Set<FrameAttribute> frameAttributes = new HashSet<>();
-            frameAttributes.add(new FrameAttribute("fake" + randomInt() , randomDouble()));
-            frameAttributes.add(new FrameAttribute("fake value " + randomInt(), randomDouble()));
-            frameAttributes.add(new FrameAttribute("fake tag " + randomInt(), randomDouble()));
-            map.put("fake", frameAttributes);
+            Map<String, Set<ImageAttribute>> map = new HashMap<>();
+            Set<ImageAttribute> imageAttributes = new HashSet<>();
+            imageAttributes.add(new ImageAttribute("fake" + randomInt() , randomDouble()));
+            imageAttributes.add(new ImageAttribute("fake value " + randomInt(), randomDouble()));
+            imageAttributes.add(new ImageAttribute("fake tag " + randomInt(), randomDouble()));
+            map.put("fake", imageAttributes);
 
 
 

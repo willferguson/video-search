@@ -1,9 +1,9 @@
-package com.github.willferguson.videosearch.analysis;
+package com.github.willferguson.videosearch.analysis.analyzers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.willferguson.videosearch.analysis.http.HttpClient;
-import com.github.willferguson.videosearch.analysis.model.FrameAttribute;
+import com.github.willferguson.videosearch.analysis.analyzers.http.HttpClient;
+import com.github.willferguson.videosearch.analysis.model.ImageAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ public class MicrosoftVisionAnalyzer implements ImageAnalyser {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public Single<Map<String, Set<FrameAttribute>>> generateMetadata(InputStream inputStream, String contentType, long contentLength, Set<String> analysisTypes) {
+    public Single<Map<String, Set<ImageAttribute>>> generateMetadata(InputStream inputStream, String contentType, long contentLength, Set<String> analysisTypes) {
         return Single.fromCallable(() -> {
             try {
                 String stringFeatures = commaSeparate(analysisTypes);
@@ -51,7 +51,7 @@ public class MicrosoftVisionAnalyzer implements ImageAnalyser {
                         .map(String::toLowerCase)
                         .map(type -> {
                             JsonNode typeNode = node.get(type);
-                            Set<FrameAttribute> frameAttributes = StreamSupport.stream(typeNode.spliterator(), true)
+                            Set<ImageAttribute> imageAttributes = StreamSupport.stream(typeNode.spliterator(), true)
                                 .map(jsonNode -> {
                                     String name = jsonNode.get("name").asText();
                                     //Annoyingly it they call it score or confidence depending on tag
@@ -60,10 +60,10 @@ public class MicrosoftVisionAnalyzer implements ImageAnalyser {
                                         confidenceNode = jsonNode.get("score");
                                     }
                                     double confidence = confidenceNode.asDouble();
-                                    return new FrameAttribute(name, confidence);
+                                    return new ImageAttribute(name, confidence);
                                 })
                                 .collect(Collectors.toSet());
-                            return new AbstractMap.SimpleEntry<>(type, frameAttributes);
+                            return new AbstractMap.SimpleEntry<>(type, imageAttributes);
                         })
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             } catch (IOException e) {
